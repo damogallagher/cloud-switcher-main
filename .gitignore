@@ -1,6 +1,7 @@
 cloud-switcher-web/*
 cloud-switcher-backend/*
 
+
 # Logs
 logs
 *.log
