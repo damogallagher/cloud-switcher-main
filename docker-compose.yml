@@ -2,21 +2,6 @@ version: '3.7'
 
 services:
 
-  cloud-switcher-web:
-    build: 
-       context: ../cloud-switcher-web
-    restart: always
-    container_name: cloud-switcher-web   
-    depends_on:
-      - cloud-switcher-backend
-
-  cloud-switcher-backend:
-    build: ../cloud-switcher-backend
-    container_name: cloud-switcher-backend
-    restart: always    
-    depends_on:
-      - docker-mongo
-  
   docker-mongo:
     image: mongo
     container_name: cloud-switcher-mongo
@@ -26,3 +11,25 @@ services:
       - $HOME/data/cloud-switcher-mongo-data:/data/db
       - $HOME/data/cloud-switcher-mongo-bkp:/data/bkp
     restart: always
+#https://docs.docker.com/compose/startup-order/
+  cloud-switcher-web:
+    build: 
+       context: ../cloud-switcher-web
+    restart: always
+    container_name: cloud-switcher-web 
+    ports:
+      - "4200:4200" # specify port forewarding  
+    depends_on:
+      - cloud-switcher-backend
+
+  cloud-switcher-backend:
+    build: ../cloud-switcher-backend
+    container_name: cloud-switcher-backend
+    restart: always 
+    ports:
+      - "4000:4000" # specify port forewarding   
+    depends_on:
+      - docker-mongo
+    environment:
+      WAIT_HOSTS: docker-mongo:27017
+  
