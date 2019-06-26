@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+
+  cloud-switcher-web:
+    build: 
+       context: ../cloud-switcher-web
+    restart: always
+    container_name: cloud-switcher-web   
+    depends_on:
+      - cloud-switcher-backend
+
+  cloud-switcher-backend:
+    build: ../cloud-switcher-backend
+    container_name: cloud-switcher-backend
+    restart: always    
+    depends_on:
+      - docker-mongo
+  
+  docker-mongo:
+    image: mongo
+    container_name: cloud-switcher-mongo
+    ports:  
+      - 27017:27017
+    volumes:
+      - $HOME/data/cloud-switcher-mongo-data:/data/db
+      - $HOME/data/cloud-switcher-mongo-bkp:/data/bkp
+    restart: always
